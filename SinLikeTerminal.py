@@ -80,8 +80,11 @@ class SinLikeTerminal():
 	'''
 	__PREFIX_CURRENT__ = '>'
 	__PREFIX_GLOBAL__ = '#'
-	__PREFIX_HELP__ = '?'
 	
+	
+	__PREFIXS__ = [__PREFIX_CURRENT__, __PREFIX_GLOBAL__]
+	
+	__CHAR_HELP__ = '?'
 	__ROUTE_SPLIT__ = '.'
 	__USER_ROUTE__ = 'route'
 	
@@ -91,15 +94,16 @@ class SinLikeTerminal():
 			'name':'R',
 			'func':func1,
 			'help':'help for R',
+			'id':'',
 			'subfunc':{
 					'r1':{
-						'id':'r1',
+						'id':'.r1',
 						'name':'R1',
 						'help':'help for R1',
 						'func':func2,
 						'subfunc':{
 							'r2':{
-								'id':'r4',
+								'id':'.r1.r4',
 								'name':'R4',
 								'help':'help for R4',
 								'func':func4
@@ -145,15 +149,22 @@ class SinLikeTerminal():
 		if message[0] == SinLikeTerminal.__PREFIX_CURRENT__:
 			# current message process
 			route = self.__get_current_route__(usersession)
-			if message[1]==SinLikeTerminal.__PREFIX_HELP__:
+			if message[1]==SinLikeTerminal.__CHAR_HELP__:
 				return route['help']
 			else:
 				return self.__process_message_with_route(route['func'], message[1:], uid, usersession)
+			
 		elif message[0] == SinLikeTerminal.__PREFIX_GLOBAL__:
-			if message[1]==SinLikeTerminal.__PREFIX_HELP__:
+			if message[1]==SinLikeTerminal.__CHAR_HELP__:
 				# global help
 				return self.route['help']
-			
+		else:
+			route = self.__get_current_route__(usersession)
+			if message == SinLikeTerminal.__CHAR_HELP__:
+				# current help
+				return route['help']
+			else:
+				return self.__process_message_with_route(route['func'], message[1:], uid, usersession)
 #		usersession = PrefixDict(rawdict=self.session, sessionid)
 		
 
@@ -174,6 +185,7 @@ if __name__ == '__main__':
 	sessionid = 'trb'
 	print slt.process_message(sessionid, '>1')
 	print slt.process_message(sessionid, '>?')
+	print slt.process_message(sessionid, 'abc')
 	
 	
 	
