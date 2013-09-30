@@ -167,7 +167,7 @@ class SinLikeTerminal():
 				route = self.__get_current_route__(usersession)
 				return route['help']
 			else:
-				return 'fail'			
+				return 'fail'
 		elif message[0] == SinLikeTerminal.__PREFIX_GLOBAL__:
 			if message[1]==SinLikeTerminal.__CHAR_HELP__:
 				# global help
@@ -198,9 +198,7 @@ if __name__ == '__main__':
 	sessionid = 'trb'
 	print slt.process_message(sessionid, '>r1')
 	print slt.process_message(sessionid, '>r4')
-	print slt.process_message(sessionid, '唐荣斌')
-	
-	
+	print slt.process_message(sessionid, 'hello')
 	print slt.session
 	
 	
