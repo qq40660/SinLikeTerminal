@@ -22,13 +22,10 @@ xx	# process message with current function
 '''
 
 import sys
-from mimify import he
 try:
 	sys.setdefaultencoding("utf-8")
 except:
 	pass
-
-
 
 class PrefixDict(object):
 	'''
@@ -51,7 +48,7 @@ class PrefixDict(object):
 		self.rawdict = rawdict
 		self.prex = prefix
 	def __trankey__(self, key):
-		return '%s_%s'%(self.prex, key)
+		return '%s_%s' % (self.prex, key)
 	
 	# Implement Dictionary function
 	def __getitem__(self, key):
@@ -69,16 +66,16 @@ class PrefixDict(object):
 
 
 def func1(uid, msg, sesn):
-	return 'func1 %s'%msg
+	return 'func1 %s' % msg
 
 def func2(uid, msg, sesn):
-	return 'func2 %s'%msg
+	return 'func2 %s' % msg
 
 def func3(uid, msg, sesn):
-	return 'func3 %s'%msg
+	return 'func3 %s' % msg
 
 def func4(uid, msg, sesn):
-	return 'func4 %s'%msg
+	return 'func4 %s' % msg
 
 class SinLikeTerminal():
 	'''
@@ -150,14 +147,14 @@ class SinLikeTerminal():
 			route = self.__get_current_route__(usersession)
 			nrs = message[1:]
 			if 'subfunc' in route and nrs in route['subfunc']:
-				routes = nrs if not len(route['route']) else '%s%s%s'%(route['route'],SinLikeTerminal.__ROUTE_SPLIT__, nrs)
+				routes = nrs if not len(route['route']) else '%s%s%s' % (route['route'], SinLikeTerminal.__ROUTE_SPLIT__, nrs)
 				self.__set_current_routes__(usersession, routes)
 				route = self.__get_current_route__(usersession)
 				return self.__gen_help__(route)
 			else:
 				return 'fail'
 		elif message[0] == SinLikeTerminal.__PREFIX_GLOBAL__:
-			if message[1]==SinLikeTerminal.__CHAR_HELP__:
+			if message[1] == SinLikeTerminal.__CHAR_HELP__:
 				# global help
 				return self.__gen_help__(route)
 		else:
@@ -175,35 +172,45 @@ class SinLikeTerminal():
 			return route['help']
 		
 	def add_route(self, route, name, thelp, func):
+		'''
+		Add a route to Terminal
+		'''
 		self.route_list.append({'route':route, 'name':name, 'func':func, 'help':thelp})
 	
 	def refresh_allroute(self):
+		'''
+		Refresh all route dictionary.
+		'''
 		route = {}
 		for rt in self.route_list:
 			rts = rt['route']
 			rtss = rts.split(SinLikeTerminal.__ROUTE_SPLIT__)
 			crt = route
-			if len(rtss)>1:
+			if len(rtss) > 1:
 				del rtss[0]
 				for s in rtss:
 					if not 'subfunc' in crt:
 						crt['subfunc'] = {}
 					if not s in crt['subfunc']:
-						crt['subfunc'][s] ={} 
+						crt['subfunc'][s] = {} 
 					crt = crt['subfunc'][s]
 			crt['name'] = rt['name']
 			crt['func'] = rt['func']
 			crt['help'] = rt['help']
 			crt['id'] = rtss[-1]
+		del self.route
 		self.route = route
 		self.refresh_route(self.route)
 
 	def refresh_route(self, route):
+		'''
+		Refresh single route dictionary.
+		'''
 		if 'subfunc' in route and len(route['subfunc']):
 			chls = []
 			for ch in route['subfunc'].values():
-				chls.append('%s%s %s'%(SinLikeTerminal.__PREFIX_CURRENT__, ch['id'], ch['name']))
-			route['funcs'] = '%s\n%s\n%s'%(route['name'], SinLikeTerminal.__LINE_SPLIT__, '\n'.join(chls))
+				chls.append('%s%s %s' % (SinLikeTerminal.__PREFIX_CURRENT__, ch['id'], ch['name']))
+			route['funcs'] = '%s\n%s\n%s' % (route['name'], SinLikeTerminal.__LINE_SPLIT__, '\n'.join(chls))
 			for ch in route['subfunc'].values():
 				self.refresh_route(ch)
 
