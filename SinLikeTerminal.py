@@ -176,7 +176,7 @@ class SinLikeTerminal():
 				return self.__process_message_with_route__(route['func'], message, uid, usersession)
 
 	def __gen_help__(self, route):
-		if 'subfunc' in route and len(route['subfunc']):
+		if 'subfunc' in route and len(route['subfunc']) and len(route['help'])==0:
 			return route['funcs']
 		else:
 			return route['help']
