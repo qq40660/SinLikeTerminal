@@ -63,17 +63,27 @@ class PrefixDict(object):
 		return self.rawdict.__str__()
 
 
+def SLTAddAttrs(**kwds):
+	def decorate(c):
+		for k in kwds:
+			setattr(c, k, kwds[k])
+		return c
+	return decorate
 
 
+@SLTAddAttrs(name='func1', help='help1')
 def func1(uid, msg, sesn):
 	return 'func1 %s' % msg
 
+@SLTAddAttrs(name='func2', help='help2')
 def func2(uid, msg, sesn):
 	return 'func2 %s' % msg
 
+@SLTAddAttrs(name='func3', help='help3')
 def func3(uid, msg, sesn):
 	return 'func3 %s' % msg
 
+@SLTAddAttrs(name='func4', help='help4')
 def func4(uid, msg, sesn):
 	return 'func4 %s' % msg
 
@@ -171,11 +181,11 @@ class SinLikeTerminal():
 		else:
 			return route['help']
 		
-	def add_route(self, route, name, thelp, func):
+	def add_route(self, route, func):
 		'''
 		Add a route to Terminal
 		'''
-		self.route_list.append({'route':route, 'name':name, 'func':func, 'help':thelp})
+		self.route_list.append({'route':route, 'name':func.name, 'func':func, 'help':func.help})
 	
 	def refresh_allroute(self):
 		'''
@@ -216,10 +226,10 @@ class SinLikeTerminal():
 
 if __name__ == '__main__':
 	slt = SinLikeTerminal(route={})
-	slt.add_route('r1', 'TitlR1', 'HelpR1', func1)
-	slt.add_route('r1.r2', 'TitlR2', 'HelpR1', func2)
-	slt.add_route('r1.r2.r3', 'TitlR3', 'HelpR3', func3)
-	slt.add_route('r1.r4', 'TitlR4', 'HelpR4', func4)
+	slt.add_route('r1', func1)
+	slt.add_route('r1.r2', func2)
+	slt.add_route('r1.r2.r3', func3)
+	slt.add_route('r1.r4', func4)
 	slt.refresh_allroute()
 	sessionid = 'trb'
 	while True:
